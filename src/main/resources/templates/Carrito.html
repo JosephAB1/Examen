@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla con Bootstrap</title>
+    <!-- Agrega el enlace al archivo CSS de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Carrito</h1>
+        <table class="table table-striped" >
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">Item</th>
+                    <th scope="col">Articulo</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reg:${carrito}">
+                  
+                    <td th:text="${reg.id}"></td>
+                    <td th:text="${reg.articulo}"><img th:src="${reg.img}"></td>
+                    <td th:text="${reg.descripcion}"></td>
+                    <td th:text="${reg.precio}"></td>
+                    <td>
+                        <input type="number" class="form-control" value="1" id="cantidad" onchange="calcularTotal(this, ${reg.precio}, '${reg.id}')">
+                    </td>
+                    <td id="total-${reg.id}">$${reg.precio}</td>
+                    <td><button>Eliminar</button></td>
+    
+                   
+                </tr>
+                <!-- Puedes agregar más filas con valores ficticios aquí -->
+            </tbody>
+            
+        </table>
+        
+        
+            <div class="row">
+            <div class="col-4">
+                <div class="card">
+                        <div class="card-body" >
+                            <h5 class="card-title" >Generar Compra</h5>
+                            <hr> <!-- Línea de separación -->
+             
+                            <p class="card-text"z>SubTotal:</p>
+                            <p class="card-text"></p>
+                          	<p class="card-text">Precio Envio:</p>
+                          	<p class="card-text"></p>
+                          	<p class="card-text">Descuento:</p>
+                          	<p class="card-text"></p>
+                          	<p class="card-text">Total a Pagar:</p>
+                            <p class="card-text"></p>
+                            <center>
+                           
+                            <button class="btn btn-danger" ><a href="/compra" style="text-decoration: none; color: white;">Actualizar el Carrito </a></button>
+                            <button class="btn btn-primary">Realiza pago y registra</button>
+                            </center>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agrega el enlace al archivo JavaScript de Bootstrap (opcional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    
+     <script>
+        function calcularTotal(inputCantidad, precio, id) {
+            const cantidad = inputCantidad.value;
+            const total = cantidad * precio;
+            document.getElementById(`total-${id}`).textContent = "$" + total.toFixed(2);
+
+            // Calcular el subtotal sumando los totales de todos los artículos
+            let subtotal = 0;
+            document.querySelectorAll('[id^="total-"]').forEach(element => {
+                subtotal += parseFloat(element.textContent.replace("$", ""));
+            });
+            document.getElementById("subtotal").textContent = "$" + subtotal.toFixed(2);
+            
+            window.onload = function() {
+            calcularTotal();
+        };
+
+            // Puedes agregar lógica adicional para calcular precio de envío, descuento, etc.
+        }
+    </script>
+</body>
+</html>
